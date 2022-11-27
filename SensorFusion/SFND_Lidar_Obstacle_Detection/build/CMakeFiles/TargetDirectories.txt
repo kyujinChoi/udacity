@@ -1,3 +1,0 @@
-/home/mobiltech/github/udacity/SensorFusion/SFND_Lidar_Obstacle_Detection/build/CMakeFiles/rebuild_cache.dir
-/home/mobiltech/github/udacity/SensorFusion/SFND_Lidar_Obstacle_Detection/build/CMakeFiles/environment.dir
-/home/mobiltech/github/udacity/SensorFusion/SFND_Lidar_Obstacle_Detection/build/CMakeFiles/edit_cache.dir
