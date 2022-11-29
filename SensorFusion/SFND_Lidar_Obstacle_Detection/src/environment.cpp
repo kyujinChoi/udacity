@@ -8,6 +8,8 @@
 // using templates for processPointClouds so also include .cpp to help linker
 #include "processPointClouds.cpp"
 
+
+
 std::vector<Car> initHighway(bool renderScene, pcl::visualization::PCLVisualizer::Ptr& viewer)
 {
 
@@ -42,11 +44,19 @@ void simpleHighway(pcl::visualization::PCLVisualizer::Ptr& viewer)
     // ----------------------------------------------------
     
     // RENDER OPTIONS
-    bool renderScene = true;
+    bool renderScene = false;
     std::vector<Car> cars = initHighway(renderScene, viewer);
     
-    // TODO:: Create lidar sensor 
 
+    // TODO:: Create lidar sensor 
+    Lidar *lidar = new Lidar(cars,0);
+    ProcessPointClouds<pcl::PointXYZ> *pointProcessor = new ProcessPointClouds<pcl::PointXYZ>();
+    pcl::PointCloud<pcl::PointXYZ>::Ptr scanCld = lidar->scan();
+    std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr, pcl::PointCloud<pcl::PointXYZ>::Ptr> segmentCloud = pointProcessor->SegmentPlane(scanCld, 30,0.3);
+    // renderRays(viewer, lidar->position ,scanCld);
+    // renderPointCloud(viewer, scanCld, "scan");
+    renderPointCloud(viewer, segmentCloud.first, "obstCloud", Color(1,0,0));
+    renderPointCloud(viewer, segmentCloud.second, "planeCloud", Color(0,1,0));
     // TODO:: Create point processor
   
 }
@@ -61,7 +71,7 @@ void initCamera(CameraAngle setAngle, pcl::visualization::PCLVisualizer::Ptr& vi
     // set camera position and angle
     viewer->initCameraParameters();
     // distance away in meters
-    int distance = 16;
+    int distance = 16; 
     
     switch(setAngle)
     {

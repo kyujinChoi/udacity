@@ -1,0 +1,3 @@
+{
+    "cmake.sourceDirectory": "${workspaceFolder}/SFND_Lidar_Obstacle_Detection"
+}
