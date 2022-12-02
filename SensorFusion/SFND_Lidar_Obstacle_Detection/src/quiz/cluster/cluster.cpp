@@ -13,12 +13,12 @@
 pcl::visualization::PCLVisualizer::Ptr initScene(Box window, int zoom)
 {
 	pcl::visualization::PCLVisualizer::Ptr viewer(new pcl::visualization::PCLVisualizer ("2D Viewer"));
-	viewer->setBackgroundColor (0, 0, 0);
+	viewer->setBackgroundColor (1, 1, 1);
   	viewer->initCameraParameters();
   	viewer->setCameraPosition(0, 0, zoom, 0, 1, 0);
   	viewer->addCoordinateSystem (1.0);
 
-  	viewer->addCube(window.x_min, window.x_max, window.y_min, window.y_max, 0, 0, 1, 1, 1, "window");
+  	viewer->addCube(window.x_min, window.x_max, window.y_min, window.y_max, 0, 0, 0, 0,0, "window");
   	return viewer;
 }
 
@@ -61,6 +61,7 @@ void render2DTree(Node* node, pcl::visualization::PCLVisualizer::Ptr& viewer, Bo
 		// split on y axis
 		else
 		{
+			std::cout << "yaxis\n";
 			viewer->addLine(pcl::PointXYZ(window.x_min, node->point[1], 0),pcl::PointXYZ(window.x_max, node->point[1], 0),1,0,0,"line"+std::to_string(iteration));
 			lowerWindow.y_max = node->point[1];
 			upperWindow.y_min = node->point[1];
@@ -72,7 +73,6 @@ void render2DTree(Node* node, pcl::visualization::PCLVisualizer::Ptr& viewer, Bo
 
 
 	}
-
 }
 
 std::vector<std::vector<int>> euclideanCluster(const std::vector<std::vector<float>>& points, KdTree* tree, float distanceTol)
@@ -105,11 +105,11 @@ int main ()
 	pcl::PointCloud<pcl::PointXYZ>::Ptr cloud = CreateData(points);
 
 	KdTree* tree = new KdTree;
-  
-    for (int i=0; i<points.size(); i++) 
-    	tree->insert(points[i],i); 
 
-  	int it = 0;
+	for (int i = 0; i < points.size(); i++)
+		tree->insert(points[i], i);
+
+	int it = 0;
   	render2DTree(tree->root,viewer,window, it);
   
   	std::cout << "Test Search" << std::endl;

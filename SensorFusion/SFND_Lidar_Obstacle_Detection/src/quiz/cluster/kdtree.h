@@ -40,7 +40,37 @@ struct KdTree
 	{
 		// TODO: Fill in this function to insert a new point into the tree
 		// the function should create a new node and place correctly with in the root 
+		int depth = 0;
+		Node* item = new Node(point, id);
 
+		Node **cur_node = &root;
+		while(*cur_node != NULL)
+		{
+			if (depth % 2 == 0)
+			{
+				if (item->point[0] < (*cur_node)->point[0])
+					cur_node = &(*cur_node)->left;
+				else
+					cur_node = &(*cur_node)->right;
+			}
+			else
+			{
+				if (item->point[1] < (*cur_node)->point[1])
+					cur_node = &(*cur_node)->left;
+				else
+					cur_node = &(*cur_node)->right;
+			}
+			depth++;
+			std::cout << "depth : " << depth << std::endl;
+		}
+		*cur_node = item;
+		// std::cout << (*cur_node)->point[0] << ", " << (*cur_node)->point[1] << std::endl;
+		std::cout << (*cur_node)->point[0] << ", " << (*cur_node)->point[1] << std::endl;
+		std::cout << root->point[0] << ", " << root->point[1] << std::endl;
+		// if(root->left == NULL)
+		// 	std::cout << "left NULL" << std::endl;
+		// if(root->right == NULL)
+		// 	std::cout << "right NULL" << std::endl;
 	}
 
 	// return a list of point ids in the tree that are within distance of target
