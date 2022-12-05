@@ -61,12 +61,11 @@ struct KdTree
 					cur_node = &(*cur_node)->right;
 			}
 			depth++;
-			std::cout << "depth : " << depth << std::endl;
 		}
 		*cur_node = item;
 		// std::cout << (*cur_node)->point[0] << ", " << (*cur_node)->point[1] << std::endl;
-		std::cout << (*cur_node)->point[0] << ", " << (*cur_node)->point[1] << std::endl;
-		std::cout << root->point[0] << ", " << root->point[1] << std::endl;
+		// std::cout << (*cur_node)->point[0] << ", " << (*cur_node)->point[1] << std::endl;
+		// std::cout << root->point[0] << ", " << root->point[1] << std::endl;
 		// if(root->left == NULL)
 		// 	std::cout << "left NULL" << std::endl;
 		// if(root->right == NULL)
@@ -74,9 +73,30 @@ struct KdTree
 	}
 
 	// return a list of point ids in the tree that are within distance of target
+	void recursiveSearch(std::vector<float> target, float distanceTol, Node **cur_node, int* depth, std::vector<int> &ids)
+	{
+		if(*cur_node == NULL) return;
+
+		if(fabs((*cur_node)->point[0] - target[0]) <= distanceTol && fabs((*cur_node)->point[1] - target[1]) <= distanceTol)
+		{
+			float dist = sqrt(((*cur_node)->point[0] - target[0]) * ((*cur_node)->point[0] - target[0]) + ((*cur_node)->point[1] - target[1]) * ((*cur_node)->point[1] - target[1]));
+			if(dist <= distanceTol)
+				ids.push_back((*cur_node)->id);
+		}
+			
+		(*depth)++;
+		if ((target[*depth % 2] - distanceTol) < (*cur_node)->point[*depth % 2])
+			recursiveSearch(target, distanceTol, &(*cur_node)->left, depth, ids);
+		if ((target[*depth % 2] + distanceTol) > (*cur_node)->point[*depth % 2])
+			recursiveSearch(target, distanceTol, &(*cur_node)->right, depth, ids);
+	}
 	std::vector<int> search(std::vector<float> target, float distanceTol)
 	{
 		std::vector<int> ids;
+		int depth = 0;
+
+		Node **cur_node = &root;
+		recursiveSearch(target, distanceTol, cur_node, &depth, ids);
 		return ids;
 	}
 	

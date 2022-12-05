@@ -60,28 +60,28 @@ include CMakeFiles/quizCluster.dir/flags.make
 CMakeFiles/quizCluster.dir/cluster.cpp.o: CMakeFiles/quizCluster.dir/flags.make
 CMakeFiles/quizCluster.dir/cluster.cpp.o: ../cluster.cpp
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/ckj/my_github/udacity/SensorFusion/SFND_Lidar_Obstacle_Detection/src/quiz/cluster/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/quizCluster.dir/cluster.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/quizCluster.dir/cluster.cpp.o -c /home/ckj/my_github/udacity/SensorFusion/SFND_Lidar_Obstacle_Detection/src/quiz/cluster/cluster.cpp
+	/usr/bin/g++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/quizCluster.dir/cluster.cpp.o -c /home/ckj/my_github/udacity/SensorFusion/SFND_Lidar_Obstacle_Detection/src/quiz/cluster/cluster.cpp
 
 CMakeFiles/quizCluster.dir/cluster.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/quizCluster.dir/cluster.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ckj/my_github/udacity/SensorFusion/SFND_Lidar_Obstacle_Detection/src/quiz/cluster/cluster.cpp > CMakeFiles/quizCluster.dir/cluster.cpp.i
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ckj/my_github/udacity/SensorFusion/SFND_Lidar_Obstacle_Detection/src/quiz/cluster/cluster.cpp > CMakeFiles/quizCluster.dir/cluster.cpp.i
 
 CMakeFiles/quizCluster.dir/cluster.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/quizCluster.dir/cluster.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ckj/my_github/udacity/SensorFusion/SFND_Lidar_Obstacle_Detection/src/quiz/cluster/cluster.cpp -o CMakeFiles/quizCluster.dir/cluster.cpp.s
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ckj/my_github/udacity/SensorFusion/SFND_Lidar_Obstacle_Detection/src/quiz/cluster/cluster.cpp -o CMakeFiles/quizCluster.dir/cluster.cpp.s
 
 CMakeFiles/quizCluster.dir/home/ckj/my_github/udacity/SensorFusion/SFND_Lidar_Obstacle_Detection/src/render/render.cpp.o: CMakeFiles/quizCluster.dir/flags.make
 CMakeFiles/quizCluster.dir/home/ckj/my_github/udacity/SensorFusion/SFND_Lidar_Obstacle_Detection/src/render/render.cpp.o: /home/ckj/my_github/udacity/SensorFusion/SFND_Lidar_Obstacle_Detection/src/render/render.cpp
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/ckj/my_github/udacity/SensorFusion/SFND_Lidar_Obstacle_Detection/src/quiz/cluster/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/quizCluster.dir/home/ckj/my_github/udacity/SensorFusion/SFND_Lidar_Obstacle_Detection/src/render/render.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/quizCluster.dir/home/ckj/my_github/udacity/SensorFusion/SFND_Lidar_Obstacle_Detection/src/render/render.cpp.o -c /home/ckj/my_github/udacity/SensorFusion/SFND_Lidar_Obstacle_Detection/src/render/render.cpp
+	/usr/bin/g++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/quizCluster.dir/home/ckj/my_github/udacity/SensorFusion/SFND_Lidar_Obstacle_Detection/src/render/render.cpp.o -c /home/ckj/my_github/udacity/SensorFusion/SFND_Lidar_Obstacle_Detection/src/render/render.cpp
 
 CMakeFiles/quizCluster.dir/home/ckj/my_github/udacity/SensorFusion/SFND_Lidar_Obstacle_Detection/src/render/render.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/quizCluster.dir/home/ckj/my_github/udacity/SensorFusion/SFND_Lidar_Obstacle_Detection/src/render/render.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ckj/my_github/udacity/SensorFusion/SFND_Lidar_Obstacle_Detection/src/render/render.cpp > CMakeFiles/quizCluster.dir/home/ckj/my_github/udacity/SensorFusion/SFND_Lidar_Obstacle_Detection/src/render/render.cpp.i
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ckj/my_github/udacity/SensorFusion/SFND_Lidar_Obstacle_Detection/src/render/render.cpp > CMakeFiles/quizCluster.dir/home/ckj/my_github/udacity/SensorFusion/SFND_Lidar_Obstacle_Detection/src/render/render.cpp.i
 
 CMakeFiles/quizCluster.dir/home/ckj/my_github/udacity/SensorFusion/SFND_Lidar_Obstacle_Detection/src/render/render.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/quizCluster.dir/home/ckj/my_github/udacity/SensorFusion/SFND_Lidar_Obstacle_Detection/src/render/render.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ckj/my_github/udacity/SensorFusion/SFND_Lidar_Obstacle_Detection/src/render/render.cpp -o CMakeFiles/quizCluster.dir/home/ckj/my_github/udacity/SensorFusion/SFND_Lidar_Obstacle_Detection/src/render/render.cpp.s
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ckj/my_github/udacity/SensorFusion/SFND_Lidar_Obstacle_Detection/src/render/render.cpp -o CMakeFiles/quizCluster.dir/home/ckj/my_github/udacity/SensorFusion/SFND_Lidar_Obstacle_Detection/src/render/render.cpp.s
 
 # Object files for target quizCluster
 quizCluster_OBJECTS = \

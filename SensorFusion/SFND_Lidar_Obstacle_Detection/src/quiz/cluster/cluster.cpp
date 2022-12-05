@@ -61,7 +61,6 @@ void render2DTree(Node* node, pcl::visualization::PCLVisualizer::Ptr& viewer, Bo
 		// split on y axis
 		else
 		{
-			std::cout << "yaxis\n";
 			viewer->addLine(pcl::PointXYZ(window.x_min, node->point[1], 0),pcl::PointXYZ(window.x_max, node->point[1], 0),1,0,0,"line"+std::to_string(iteration));
 			lowerWindow.y_max = node->point[1];
 			upperWindow.y_min = node->point[1];
@@ -74,14 +73,36 @@ void render2DTree(Node* node, pcl::visualization::PCLVisualizer::Ptr& viewer, Bo
 
 	}
 }
-
+void clusterHelper(std::vector<bool>& is_processed, std::vector<int>& cluster, int idx, const std::vector<std::vector<float>>& points, KdTree* tree, float distanceTol)
+{
+	std::vector<int> nearby = tree->search(points[idx],distanceTol);
+	for(int i = 0; i < nearby.size(); i++)
+	{
+		if (is_processed[nearby[i]] == false)
+		{
+			is_processed[nearby[i]] = true;
+			cluster.push_back(nearby[i]);
+			clusterHelper(is_processed, cluster, nearby[i], points, tree, distanceTol);
+		}
+	}
+}
 std::vector<std::vector<int>> euclideanCluster(const std::vector<std::vector<float>>& points, KdTree* tree, float distanceTol)
 {
 
 	// TODO: Fill out this function to return list of indices for each cluster
 
 	std::vector<std::vector<int>> clusters;
- 
+
+	std::vector<bool> is_processed(points.size(), false);
+	for(int i = 0 ; i < points.size(); i++)
+	{
+		if (is_processed[i] == true)
+			continue;
+			
+		std::vector<int> cluster;
+		clusterHelper(is_processed, cluster, i, points, tree, distanceTol);
+		clusters.push_back(cluster);
+	}
 	return clusters;
 
 }
@@ -136,7 +157,9 @@ int main ()
   		for(int indice: cluster)
   			clusterCloud->points.push_back(pcl::PointXYZ(points[indice][0],points[indice][1],0));
   		renderPointCloud(viewer, clusterCloud,"cluster"+std::to_string(clusterId),colors[clusterId%3]);
+		std::cout << "points in cluster[" << clusterId << "] : " <<cluster.size() << std::endl;
   		++clusterId;
+		
   	}
   	if(clusters.size()==0)
   		renderPointCloud(viewer,cloud,"data");
