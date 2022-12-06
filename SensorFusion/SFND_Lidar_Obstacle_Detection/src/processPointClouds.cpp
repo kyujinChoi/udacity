@@ -175,7 +175,87 @@ Box ProcessPointClouds<PointT>::BoundingBox(typename pcl::PointCloud<PointT>::Pt
 
     return box;
 }
+template<typename PointT>
+std::unordered_set<int> RansacPlane(typename pcl::PointCloud<PointT>::Ptr cloud, int maxIterations, float distanceTol)
+{
+	std::unordered_set<int> inliersResult;
+	srand(time(NULL));
+	int p1_idx, p2_idx, p3_idx;
+	float dist;
+	while(maxIterations--)
+	{	
+		std::unordered_set<int> inliers;
+		p1_idx = rand() % cloud->points.size();
+		p2_idx = p1_idx;
+		p3_idx = p1_idx;
+		while(p1_idx == p2_idx)
+			p2_idx = rand() % cloud->points.size();
+		while((p1_idx == p3_idx) || (p2_idx == p3_idx))
+		{
+			p3_idx = rand() % cloud->points.size();
+		}
 
+		float a = ((cloud->points[p2_idx].y - cloud->points[p1_idx].y) * (cloud->points[p3_idx].z - cloud->points[p1_idx].z)) - ((cloud->points[p2_idx].z - cloud->points[p1_idx].z) * (cloud->points[p3_idx].y - cloud->points[p1_idx].y));
+		float b = ((cloud->points[p2_idx].z - cloud->points[p1_idx].z) * (cloud->points[p3_idx].x - cloud->points[p1_idx].x)) - ((cloud->points[p2_idx].x - cloud->points[p1_idx].x) * (cloud->points[p3_idx].z - cloud->points[p1_idx].z));
+		float c = ((cloud->points[p2_idx].x - cloud->points[p1_idx].x) * (cloud->points[p3_idx].y - cloud->points[p1_idx].y)) - ((cloud->points[p2_idx].y - cloud->points[p1_idx].y) * (cloud->points[p3_idx].x - cloud->points[p1_idx].x));
+		float d = -(a * cloud->points[p1_idx].x + b * cloud->points[p1_idx].y + c * cloud->points[p1_idx].z);
+		for(int i = 0; i < cloud->points.size(); i++)
+		{
+			if(i == p1_idx || i == p2_idx || i == p3_idx)	continue;
+			dist = fabs(a * cloud->points[i].x + b * cloud->points[i].y + c * cloud->points[i].z + d) / sqrt(a * a + b * b + c * c);
+			if(dist <= distanceTol)
+				inliers.insert(i);
+		}
+
+		if(inliers.size() > inliersResult.size())
+		{
+			inliersResult = inliers;
+			inliersResult.insert(p1_idx);
+			inliersResult.insert(p2_idx);
+			inliersResult.insert(p3_idx);
+		}
+		
+	}
+	// TODO: Fill in this function
+
+	// For max iterations 
+
+	// Randomly sample subset and fit line
+
+	// Measure distance between every point and fitted line
+	// If distance is smaller than threshold count it as inlier
+
+	// Return indicies of inliers from fitted line with most inliers
+	
+	return inliersResult;
+
+}
+template<typename PointT>
+std::pair<typename pcl::PointCloud<PointT>::Ptr, typename pcl::PointCloud<PointT>::Ptr> ProcessPointClouds<PointT>::mySegmentPlane(typename pcl::PointCloud<PointT>::Ptr cloud, int maxIterations, float distanceThreshold)
+{
+    // Time segmentation process
+    auto startTime = std::chrono::steady_clock::now();
+    std::unordered_set<int> inliers = RansacPlane<PointT>(cloud, maxIterations, distanceThreshold);
+    typename pcl::PointCloud<PointT>::Ptr cloudInliers(new pcl::PointCloud<PointT>());
+	typename pcl::PointCloud<PointT>::Ptr cloudOutliers(new pcl::PointCloud<PointT>());
+
+	for(int index = 0; index < cloud->points.size(); index++)
+	{
+		PointT point = cloud->points[index];
+		if(inliers.count(index))
+			cloudInliers->points.push_back(point);
+		else
+			cloudOutliers->points.push_back(point);
+	}
+    // TODO:: Fill in this function to find inliers for the cloud.
+
+    auto endTime = std::chrono::steady_clock::now();
+    auto elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime);
+    std::cout << "plane segmentation took " << elapsedTime.count() << " milliseconds" << std::endl;
+
+    std::pair<typename pcl::PointCloud<PointT>::Ptr, typename pcl::PointCloud<PointT>::Ptr> segResult(cloudOutliers, cloudInliers);
+    return segResult;
+}
 
 template<typename PointT>
 void ProcessPointClouds<PointT>::savePcd(typename pcl::PointCloud<PointT>::Ptr cloud, std::string file)

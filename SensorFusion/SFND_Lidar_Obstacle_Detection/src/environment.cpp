@@ -78,7 +78,7 @@ void simpleHighway(pcl::visualization::PCLVisualizer::Ptr& viewer)
 void cityBlock(pcl::visualization::PCLVisualizer::Ptr& viewer, ProcessPointClouds<pcl::PointXYZI> *pointProcessor, pcl::PointCloud<pcl::PointXYZI>::Ptr inCld)
 {
     pcl::PointCloud<pcl::PointXYZI>::Ptr filterCld = pointProcessor->FilterCloud(inCld, .5, Eigen::Vector4f(-100, -10, -2, 1), Eigen::Vector4f(100, 10, 2, 1));
-    std::pair<pcl::PointCloud<pcl::PointXYZI>::Ptr, pcl::PointCloud<pcl::PointXYZI>::Ptr> segmentCloud = pointProcessor->SegmentPlane(filterCld, 30, 0.5);
+    std::pair<pcl::PointCloud<pcl::PointXYZI>::Ptr, pcl::PointCloud<pcl::PointXYZI>::Ptr> segmentCloud = pointProcessor->mySegmentPlane(filterCld, 30, 0.5);
     std::vector<pcl::PointCloud<pcl::PointXYZI>::Ptr> cloudClusters = pointProcessor->Clustering(segmentCloud.first, 1.0, 10, 300);
 
     int clusterId = 0;
