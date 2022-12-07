@@ -156,7 +156,7 @@ std::vector<typename pcl::PointCloud<PointT>::Ptr> ProcessPointClouds<PointT>::C
 }
 static void clusterHelper(std::vector<bool>& is_processed, std::vector<int>& cluster, int idx, const std::vector<std::vector<float>>& points, KdTree* tree, float distanceTol)
 {
-	std::vector<int> nearby = tree->search(points[idx],distanceTol);
+    std::vector<int> nearby = tree->search(points[idx],distanceTol);
 	for(int i = 0; i < nearby.size(); i++)
 	{
 		if (is_processed[nearby[i]] == false)
@@ -220,9 +220,9 @@ std::vector<typename pcl::PointCloud<PointT>::Ptr> ProcessPointClouds<PointT>::m
             p.intensity = points[indice][3];
             clusterCloud->points.push_back(p);
         }
-        // std::cout << "points in cluster[" << clusterId << "] : " <<cluster.size() << std::endl;
+        std::cout << "points in cluster[" << clusterId << "] : " <<cluster.size() << std::endl;
   		++clusterId;
-        if(clusterCloud->points.size() > minSize)
+        // if(clusterCloud->points.size() > minSize)
             clusterClouds.push_back(clusterCloud);
   	}
     auto endTime = std::chrono::steady_clock::now();
