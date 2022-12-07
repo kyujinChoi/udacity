@@ -9,6 +9,7 @@ struct BoxQ
 	float cube_length;
     float cube_width;
     float cube_height;
+	Eigen::Vector4f centroid;
 };
 struct Box
 {

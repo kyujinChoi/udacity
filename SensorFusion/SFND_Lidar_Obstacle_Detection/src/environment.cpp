@@ -75,18 +75,25 @@ void simpleHighway(pcl::visualization::PCLVisualizer::Ptr& viewer)
     // TODO:: Create point processor
   
 }
+std::vector<BoxQ> tracking_objs;
+
+float getCentroidDistance(BoxQ box1, BoxQ box2)
+{
+    return sqrt((box1.centroid(0) - box2.centroid(0))* (box1.centroid(0) - box2.centroid(0)) + (box1.centroid(1) - box2.centroid(1))* (box1.centroid(1) - box2.centroid(1)) + (box1.centroid(2) - box2.centroid(2))* (box1.centroid(2) - box2.centroid(2)));
+}
 void cityBlock(pcl::visualization::PCLVisualizer::Ptr& viewer, ProcessPointClouds<pcl::PointXYZI> *pointProcessor, pcl::PointCloud<pcl::PointXYZI>::Ptr inCld)
 {
     std::cout << "cityBlock start\n";
     pcl::PointCloud<pcl::PointXYZI>::Ptr filterCld = pointProcessor->FilterCloud(inCld, .5, Eigen::Vector4f(-20, -5, -2, 1), Eigen::Vector4f(20, 5, 2, 1));
-    std::pair<pcl::PointCloud<pcl::PointXYZI>::Ptr, pcl::PointCloud<pcl::PointXYZI>::Ptr> segmentCloud = pointProcessor->mySegmentPlane(filterCld, 30, 0.5);
-    std::vector<pcl::PointCloud<pcl::PointXYZI>::Ptr> cloudClusters = pointProcessor->myClustering(segmentCloud.first, 1.0, 10, 300);
+    std::pair<pcl::PointCloud<pcl::PointXYZI>::Ptr, pcl::PointCloud<pcl::PointXYZI>::Ptr> segmentCloud = pointProcessor->mySegmentPlane(filterCld, 30, 0.2);
+    std::vector<pcl::PointCloud<pcl::PointXYZI>::Ptr> cloudClusters = pointProcessor->myClustering(segmentCloud.first, .5, 10, 300);
     // std::vector<pcl::PointCloud<pcl::PointXYZI>::Ptr> cloudClusters = pointProcessor->myClustering(inCld, 1.0, 10, 300);
     std::cout << "inCld->point.size() : " << inCld->points.size()<< std::endl;
 
     int clusterId = 0;
-    std::vector<Color> colors = {Color(1, 0, 0), Color(0, 1, 0), Color(0, 0, 1), Color(1, 1, 0), Color(0, 1, 1), Color(1, 0, 1)};
+    std::vector<Color> colors = {Color(1, 0, 0), Color(0, 0, 1), Color(1, 1, 0), Color(0, 1, 1), Color(1, 0, 1)};
 
+    std::vector<BoxQ> current_objs;
     for (pcl::PointCloud<pcl::PointXYZI>::Ptr cluster : cloudClusters)
     {
         std::cout << "cluster size ";
@@ -95,10 +102,34 @@ void cityBlock(pcl::visualization::PCLVisualizer::Ptr& viewer, ProcessPointCloud
 
         // Box box = pointProcessor->BoundingBox(cluster);
         BoxQ box = pointProcessor->BoundingBoxPCA(cluster);
-        renderBox(viewer, box, clusterId, colors[clusterId % colors.size()]);
+        if(tracking_objs.size() == 0)
+        {
+            current_objs.push_back(box);
+            renderBox(viewer, box, clusterId, colors[clusterId % colors.size()], 1.0, false);
+        }
+        else
+        {
+            bool found = false;
+            for(int i = 0; i < tracking_objs.size();i++)
+            {
+                if(getCentroidDistance(tracking_objs[i], box) < 1.0)
+                {
+                    current_objs.push_back(box);
+                    renderBox(viewer, box, clusterId, colors[clusterId % colors.size()], 1.0, true);
+                    found = true;
+                    break;
+                }
+            }
+            if(!found)
+            {
+                current_objs.push_back(box);
+                renderBox(viewer, box, clusterId, colors[clusterId % colors.size()], 1.0, false);
+            }
+        }
         ++clusterId;
     }
-    // renderPointCloud(viewer,filterCld,"filterCld", Color(0,1,0));
+    tracking_objs = current_objs;
+    // renderPointCloud(viewer,inCld,"inCld", Color(0,1,0));
     renderPointCloud(viewer, segmentCloud.second, "segmentCloud", Color(0, 1, 0));
     filterCld->clear();
     segmentCloud.first->clear();
@@ -135,45 +166,50 @@ void cityBlock(pcl::visualization::PCLVisualizer::Ptr& viewer)
 void initCamera(CameraAngle setAngle, pcl::visualization::PCLVisualizer::Ptr& viewer)
 {
 
-    viewer->setBackgroundColor (0, 0, 0);
-    
+    viewer->setBackgroundColor(0, 0, 0);
+
     // set camera position and angle
     viewer->initCameraParameters();
     // distance away in meters
-    int distance = 16; 
-    
-    switch(setAngle)
+    int distance = 16;
+
+    switch (setAngle)
     {
-        case XY : viewer->setCameraPosition(-distance, -distance, distance, 1, 1, 0); break;
-        case TopDown : viewer->setCameraPosition(0, 0, distance, 1, 0, 1); break;
-        case Side : viewer->setCameraPosition(0, -distance, 0, 0, 0, 1); break;
-        case FPS : viewer->setCameraPosition(-10, 0, 0, 0, 0, 1);
+    case XY:
+        viewer->setCameraPosition(-distance, -distance, distance, 1, 1, 0);
+        break;
+    case TopDown:
+        viewer->setCameraPosition(0, 0, distance, 1, 0, 1);
+        break;
+    case Side:
+        viewer->setCameraPosition(0, -distance, 0, 0, 0, 1);
+        break;
+    case FPS:
+        viewer->setCameraPosition(-10, 0, 0, 0, 0, 1);
     }
 
-    if(setAngle!=FPS)
-        viewer->addCoordinateSystem (1.0);
+    if (setAngle != FPS)
+        viewer->addCoordinateSystem(1.0);
 }
 
 pcl::PointCloud<pcl::PointXYZI>::Ptr tmpCreateData(std::vector<std::vector<float>> points)
 {
-	pcl::PointCloud<pcl::PointXYZI>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZI>());
-  	
-  	for(int i = 0; i < points.size(); i++)
-  	{
-  		pcl::PointXYZI point;
-  		point.x = points[i][0];
-  		point.y = points[i][1];
-  		point.z = points[i][2];
+    pcl::PointCloud<pcl::PointXYZI>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZI>());
+
+    for (int i = 0; i < points.size(); i++)
+    {
+        pcl::PointXYZI point;
+        point.x = points[i][0];
+        point.y = points[i][1];
+        point.z = points[i][2];
         point.intensity = 0;
 
-  		cloud->points.push_back(point);
+        cloud->points.push_back(point);
+    }
+    cloud->width = cloud->points.size();
+    cloud->height = 1;
 
-  	}
-  	cloud->width = cloud->points.size();
-  	cloud->height = 1;
-
-  	return cloud;
-
+    return cloud;
 }
 
 int main (int argc, char** argv)
@@ -186,26 +222,26 @@ int main (int argc, char** argv)
     // simpleHighway(viewer);
     ProcessPointClouds<pcl::PointXYZI> *pointProcessor = new ProcessPointClouds<pcl::PointXYZI>();
     
-    std::vector<boost::filesystem::path> stream = pointProcessor->streamPcd("../src/sensors/data/pcd/data_1");
+    std::vector<boost::filesystem::path> stream = pointProcessor->streamPcd("../src/sensors/data/pcd/data_2");
     auto streamIterator = stream.begin();
     pcl::PointCloud<pcl::PointXYZI>::Ptr inputCloud;
 
-    std::vector<std::vector<float>> points;
-    for(float i = 0 ; i < 2 ; i +=0.9)
-    {
-        for(float j = 0; j < 2; j+=0.9)
-        {
-            points.push_back({i,j,0});
-        }
-    }
+    // std::vector<std::vector<float>> points;
+    // for(float i = 0 ; i < 2 ; i +=0.9)
+    // {
+    //     for(float j = 0; j < 2; j+=0.9)
+    //     {
+    //         points.push_back({i,j,0});
+    //     }
+    // }
 
-    for(float i = 0 ; i < 2 ; i +=0.9)
-    {
-        for(float j = 0; j < 2; j+=0.9)
-        {
-            points.push_back({i+10,j,3});
-        }
-    }
+    // for(float i = 0 ; i < 2 ; i +=0.9)
+    // {
+    //     for(float j = 0; j < 2; j+=0.9)
+    //     {
+    //         points.push_back({i+10,j,3});
+    //     }
+    // }
     // pcl::PointCloud<pcl::PointXYZI>::Ptr inputCloud = tmpCreateData(points);
 
     while (!viewer->wasStopped ())
@@ -219,7 +255,7 @@ int main (int argc, char** argv)
         streamIterator++;
         if (streamIterator == stream.end())
             streamIterator = stream.begin();
-        sleep(1);
+        usleep(1000000);
         viewer->spinOnce ();
         inputCloud->clear();
     } 

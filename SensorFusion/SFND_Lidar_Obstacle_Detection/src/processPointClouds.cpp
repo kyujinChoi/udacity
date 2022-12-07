@@ -226,7 +226,7 @@ std::vector<typename pcl::PointCloud<PointT>::Ptr> ProcessPointClouds<PointT>::m
         }
         std::cout << "points in cluster[" << clusterId << "] : " <<cluster.size() << std::endl;
   		++clusterId;
-        // if(clusterCloud->points.size() > minSize)
+        if(clusterCloud->points.size() > minSize)
             clusterClouds.push_back(clusterCloud);
   	}
     auto endTime = std::chrono::steady_clock::now();
@@ -300,7 +300,7 @@ BoxQ ProcessPointClouds<PointT>::BoundingBoxPCA(typename pcl::PointCloud<PointT>
     boxq.cube_length = max_point.x - min_point.x;
     boxq.cube_width = max_point.y - min_point.y;
     boxq.cube_height = max_point.z - min_point.z;
-
+    boxq.centroid = pcaCentroid;
     return boxq;
 }
 template<typename PointT>

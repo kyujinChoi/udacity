@@ -90,7 +90,7 @@ void renderBox(pcl::visualization::PCLVisualizer::Ptr& viewer, Box box, int id, 
     viewer->setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_OPACITY, opacity*0.3, cubeFill);
 }
 
-void renderBox(pcl::visualization::PCLVisualizer::Ptr& viewer, BoxQ box, int id, Color color, float opacity)
+void renderBox(pcl::visualization::PCLVisualizer::Ptr& viewer, BoxQ box, int id, Color color, float opacity, bool tracking)
 {
 	if(opacity > 1.0)
 		opacity = 1.0;
@@ -103,9 +103,15 @@ void renderBox(pcl::visualization::PCLVisualizer::Ptr& viewer, BoxQ box, int id,
     viewer->setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_COLOR, color.r, color.g, color.b, cube);
     viewer->setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_OPACITY, opacity, cube);
     
-    std::string cubeFill = "boxFill"+std::to_string(id);
-    viewer->addCube(box.bboxTransform, box.bboxQuaternion, box.cube_length, box.cube_width, box.cube_height, cubeFill);
-    viewer->setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_REPRESENTATION, pcl::visualization::PCL_VISUALIZER_REPRESENTATION_SURFACE, cubeFill); 
-    viewer->setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_COLOR, color.r, color.g, color.b, cubeFill);
-    viewer->setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_OPACITY, opacity*0.3, cubeFill);
+	if(tracking)
+	{
+		
+		std::string cubeFill = "boxFill" + std::to_string(id);
+		pcl::PointXYZ txt( box.centroid(0),  box.centroid(1), box.centroid(2));
+		viewer->addText3D("Tracking" + std::to_string(id), txt, 0.30, color.r, color.g, color.b);
+		viewer->addCube(box.bboxTransform, box.bboxQuaternion, box.cube_length, box.cube_width, box.cube_height, cubeFill);
+		viewer->setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_REPRESENTATION, pcl::visualization::PCL_VISUALIZER_REPRESENTATION_SURFACE, cubeFill);
+		viewer->setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_COLOR, color.r, color.g, color.b, cubeFill);
+		viewer->setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_OPACITY, opacity * 0.3, cubeFill);
+	}
 }
