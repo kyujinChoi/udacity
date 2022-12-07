@@ -249,6 +249,7 @@ CMakeFiles/environment.dir/src/environment.cpp.o: /usr/include/pcl-1.10/pcl/comm
 CMakeFiles/environment.dir/src/environment.cpp.o: /usr/include/pcl-1.10/pcl/common/copy_point.h
 CMakeFiles/environment.dir/src/environment.cpp.o: /usr/include/pcl-1.10/pcl/common/distances.h
 CMakeFiles/environment.dir/src/environment.cpp.o: /usr/include/pcl-1.10/pcl/common/eigen.h
+CMakeFiles/environment.dir/src/environment.cpp.o: /usr/include/pcl-1.10/pcl/common/geometry.h
 CMakeFiles/environment.dir/src/environment.cpp.o: /usr/include/pcl-1.10/pcl/common/impl/accumulators.hpp
 CMakeFiles/environment.dir/src/environment.cpp.o: /usr/include/pcl-1.10/pcl/common/impl/centroid.hpp
 CMakeFiles/environment.dir/src/environment.cpp.o: /usr/include/pcl-1.10/pcl/common/impl/common.hpp
@@ -761,6 +762,7 @@ CMakeFiles/environment.dir/src/processPointClouds.cpp.o: /usr/include/pcl-1.10/p
 CMakeFiles/environment.dir/src/processPointClouds.cpp.o: /usr/include/pcl-1.10/pcl/common/copy_point.h
 CMakeFiles/environment.dir/src/processPointClouds.cpp.o: /usr/include/pcl-1.10/pcl/common/distances.h
 CMakeFiles/environment.dir/src/processPointClouds.cpp.o: /usr/include/pcl-1.10/pcl/common/eigen.h
+CMakeFiles/environment.dir/src/processPointClouds.cpp.o: /usr/include/pcl-1.10/pcl/common/geometry.h
 CMakeFiles/environment.dir/src/processPointClouds.cpp.o: /usr/include/pcl-1.10/pcl/common/impl/accumulators.hpp
 CMakeFiles/environment.dir/src/processPointClouds.cpp.o: /usr/include/pcl-1.10/pcl/common/impl/centroid.hpp
 CMakeFiles/environment.dir/src/processPointClouds.cpp.o: /usr/include/pcl-1.10/pcl/common/impl/common.hpp

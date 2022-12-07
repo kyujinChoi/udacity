@@ -93,7 +93,8 @@ void cityBlock(pcl::visualization::PCLVisualizer::Ptr& viewer, ProcessPointCloud
         pointProcessor->numPoints(cluster);
         renderPointCloud(viewer, cluster, "obstCloud" + std::to_string(clusterId), colors[clusterId % colors.size()]);
 
-        Box box = pointProcessor->BoundingBox(cluster);
+        // Box box = pointProcessor->BoundingBox(cluster);
+        BoxQ box = pointProcessor->BoundingBoxPCA(cluster);
         renderBox(viewer, box, clusterId, colors[clusterId % colors.size()]);
         ++clusterId;
     }
