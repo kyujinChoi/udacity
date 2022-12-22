@@ -7,7 +7,7 @@
 #include "processPointClouds.h"
 // using templates for processPointClouds so also include .cpp to help linker
 #include "processPointClouds.cpp"
-
+#include <thread>
 
 
 std::vector<Car> initHighway(bool renderScene, pcl::visualization::PCLVisualizer::Ptr& viewer)
@@ -147,7 +147,7 @@ void cityBlock(pcl::visualization::PCLVisualizer::Ptr& viewer)
     
     pcl::PointCloud<pcl::PointXYZI>::Ptr inCld = pointProcessor->loadPcd("../src/sensors/data/pcd/data_1/0000000000.pcd");
     pcl::PointCloud<pcl::PointXYZI>::Ptr filterCld = pointProcessor->FilterCloud(inCld, .5 , Eigen::Vector4f (-100, -10, -2, 1), Eigen::Vector4f ( 100, 10, 2, 1));
-    std::pair<pcl::PointCloud<pcl::PointXYZI>::Ptr, pcl::PointCloud<pcl::PointXYZI>::Ptr> segmentCloud = pointProcessor->SegmentPlane(filterCld, 30,0.5);
+    std::pair<pcl::PointCloud<pcl::PointXYZI>::Ptr, pcl::PointCloud<pcl::PointXYZI>::Ptr> segmentCloud = pointProcessor->SegmentPlane(filterCld, 30,0.7);
     std::vector<pcl::PointCloud<pcl::PointXYZI>::Ptr> cloudClusters = pointProcessor->Clustering(segmentCloud.first, 1.0, 10, 300);
 
     int clusterId = 0;
@@ -216,7 +216,15 @@ pcl::PointCloud<pcl::PointXYZI>::Ptr tmpCreateData(std::vector<std::vector<float
 
     return cloud;
 }
-
+int key_cnt =0 ;
+void getchar_func()
+{
+    while(1)
+    {
+        getchar();
+        key_cnt++;
+    }
+}
 int main (int argc, char** argv)
 {
     std::cout << "starting enviroment" << std::endl;
@@ -249,19 +257,26 @@ int main (int argc, char** argv)
     // }
     // pcl::PointCloud<pcl::PointXYZI>::Ptr inputCloud = tmpCreateData(points);
 
+    std::thread key_input(getchar_func);
+    int key_tmp = 0;
     while (!viewer->wasStopped ())
     {
+        if(key_tmp != key_cnt)
+        {
+            viewer->removeAllPointClouds();
+            viewer->removeAllShapes();
+            streamIterator++;
+            if (streamIterator == stream.end())
+                streamIterator = stream.begin();
 
-        viewer->removeAllPointClouds();
-        viewer->removeAllShapes();
+            inputCloud = pointProcessor->loadPcd((*streamIterator).string());
+            cityBlock(viewer, pointProcessor, inputCloud);
+            inputCloud->clear();
+            key_tmp = key_cnt;
+        }
 
-        inputCloud = pointProcessor->loadPcd((*streamIterator).string());
-        cityBlock(viewer, pointProcessor, inputCloud);
-        streamIterator++;
-        if (streamIterator == stream.end())
-            streamIterator = stream.begin();
-        usleep(1000000);
+        // usleep(10000);
         viewer->spinOnce ();
-        inputCloud->clear();
+        
     } 
 }

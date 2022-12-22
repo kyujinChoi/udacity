@@ -276,6 +276,10 @@ BoxQ ProcessPointClouds<PointT>::BoundingBoxPCA(typename pcl::PointCloud<PointT>
     /// This line is necessary for proper orientation in some cases. The numbers come out the same without it, but
     /// the signs are different and the box doesn't get correctly oriented in some cases.
     eigenVectorsPCA.col(2) = eigenVectorsPCA.col(0).cross(eigenVectorsPCA.col(1));
+    // eigenVectorsPCA.col(0) << 1,0,0;
+    // eigenVectorsPCA.col(1) << 0,1,0;
+    // eigenVectorsPCA.col(2) << 0,0,1;
+    std::cout << "eigenVectorsPCA : \n" << eigenVectorsPCA<<std::endl;
 
     // Transform the original cloud to the origin point where the principal components correspond to the axes.
     Eigen::Matrix4f projectionTransform(Eigen::Matrix4f::Identity());

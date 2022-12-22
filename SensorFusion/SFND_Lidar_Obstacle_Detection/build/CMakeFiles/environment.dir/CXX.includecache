@@ -15,6 +15,8 @@ processPointClouds.h
 /home/ckj/my_github/udacity/SensorFusion/SFND_Lidar_Obstacle_Detection/src/processPointClouds.h
 processPointClouds.cpp
 /home/ckj/my_github/udacity/SensorFusion/SFND_Lidar_Obstacle_Detection/src/processPointClouds.cpp
+thread
+-
 
 /home/ckj/my_github/udacity/SensorFusion/SFND_Lidar_Obstacle_Detection/src/kdtree.h
 render/render.h

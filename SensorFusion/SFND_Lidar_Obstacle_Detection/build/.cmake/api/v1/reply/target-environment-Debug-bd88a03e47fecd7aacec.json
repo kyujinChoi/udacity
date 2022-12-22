@@ -342,6 +342,10 @@
 				"role" : "libraries"
 			},
 			{
+				"fragment" : "-lpthread",
+				"role" : "libraries"
+			},
+			{
 				"backtrace" : 2,
 				"fragment" : "/usr/lib/x86_64-linux-gnu/libpcl_surface.so",
 				"role" : "libraries"
