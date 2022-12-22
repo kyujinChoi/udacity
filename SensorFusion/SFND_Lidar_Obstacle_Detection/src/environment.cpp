@@ -85,10 +85,10 @@ void cityBlock(pcl::visualization::PCLVisualizer::Ptr& viewer, ProcessPointCloud
 {
     std::cout << "cityBlock start\n";
     pcl::PointCloud<pcl::PointXYZI>::Ptr filterCld = pointProcessor->FilterCloud(inCld, .1, Eigen::Vector4f(-20, -7, -2, 1), Eigen::Vector4f(20, 7, 1, 1));
-    std::pair<pcl::PointCloud<pcl::PointXYZI>::Ptr, pcl::PointCloud<pcl::PointXYZI>::Ptr> segmentCloud = pointProcessor->mySegmentPlane(filterCld, 30, 0.25);
+    std::pair<std::vector<float>, std::pair<pcl::PointCloud<pcl::PointXYZI>::Ptr, pcl::PointCloud<pcl::PointXYZI>::Ptr> > segmentCloud = pointProcessor->mySegmentPlane(filterCld, 30, 0.25);
     // renderPointCloud(viewer, inCld, "inCld", Color(0, 1, 0));
-    
-    std::vector<pcl::PointCloud<pcl::PointXYZI>::Ptr> cloudClusters = pointProcessor->myClustering(segmentCloud.first, .8, 5, 300);
+    std::cout << segmentCloud.first[0]<<", " << segmentCloud.first[1] << ", " << segmentCloud.first[2]  << std::endl;
+    std::vector<pcl::PointCloud<pcl::PointXYZI>::Ptr> cloudClusters = pointProcessor->myClustering(segmentCloud.second.first, .8, 5, 300);
     // renderPointCloud(viewer, segmentCloud.first, "segmentCloud.first", Color(1, 0, 0));
     // renderPointCloud(viewer, segmentCloud.second, "segmentCloud.second", Color(0, 0, 1));
     // std::vector<pcl::PointCloud<pcl::PointXYZI>::Ptr> cloudClusters = pointProcessor->myClustering(inCld, 1.0, 10, 300);
@@ -101,12 +101,12 @@ void cityBlock(pcl::visualization::PCLVisualizer::Ptr& viewer, ProcessPointCloud
     std::vector<BoxQ> current_objs;
     for (pcl::PointCloud<pcl::PointXYZI>::Ptr cluster : cloudClusters)
     {
-        std::cout << "cluster size ";
+        // std::cout << "cluster size ";
         pointProcessor->numPoints(cluster);
         renderPointCloud(viewer, cluster, "obstCloud" + std::to_string(clusterId), colors[clusterId % colors.size()]);
         viewer->setPointCloudRenderingProperties (pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 3, "obstCloud" + std::to_string(clusterId));
         // Box box = pointProcessor->BoundingBox(cluster);
-        BoxQ box = pointProcessor->BoundingBoxPCA(cluster);
+        BoxQ box = pointProcessor->BoundingBoxPCA(segmentCloud.first, cluster);
         if(tracking_objs.size() == 0)
         {
             current_objs.push_back(box);
@@ -135,10 +135,10 @@ void cityBlock(pcl::visualization::PCLVisualizer::Ptr& viewer, ProcessPointCloud
     }
     tracking_objs = current_objs;
     // renderPointCloud(viewer,inCld,"inCld", Color(0,1,0));
-    renderPointCloud(viewer, segmentCloud.second, "segmentCloud", Color(0, 1, 0));
+    renderPointCloud(viewer, segmentCloud.second.second, "segmentCloud", Color(0, 1, 0));
     filterCld->clear();
-    segmentCloud.first->clear();
-    segmentCloud.second->clear();
+    segmentCloud.second.first->clear();
+    segmentCloud.second.second->clear();
     cloudClusters.clear();
 }
 void cityBlock(pcl::visualization::PCLVisualizer::Ptr& viewer)
