@@ -1,3 +1,0 @@
-/home/ckj/my_github/udacity/build/CMakeFiles/rebuild_cache.dir
-/home/ckj/my_github/udacity/build/CMakeFiles/edit_cache.dir
-/home/ckj/my_github/udacity/build/CMakeFiles/environment.dir
